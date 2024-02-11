@@ -10,14 +10,14 @@ import { checkIfImage } from '../utils';
 const CreateCampaign = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // const { createCampaign } = useStateContext();
+  const { createCampaign } = useStateContext();
   const [form, setForm] = useState({
     name: '',
     title: '',
     description: '',
     target: '', 
     deadline: '',
-    image: ''
+    // image: ''
   });
 
   const handleFormFieldChange = (fieldName:string, e:ChangeEvent<HTMLInputElement>) => {
@@ -27,17 +27,17 @@ const CreateCampaign = () => {
   const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    checkIfImage(form.image, async (exists:string) => {
-      if(exists) {
+    // checkIfImage(form.image, async (exists:string) => {
+    //   if(exists) {
         setIsLoading(true)
-        // await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
+        await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
         setIsLoading(false);
         navigate('/');
-      } else {
-        alert('Provide valid image URL')
-        setForm({ ...form, image: '' });
-      }
-    })
+      // } else {
+      //   alert('Provide valid image URL')
+      //   setForm({ ...form, image: '' });
+      // }
+  //   })
   }
 
   return (
