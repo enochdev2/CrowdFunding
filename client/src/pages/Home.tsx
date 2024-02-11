@@ -7,18 +7,18 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState<[]>([]);
 
-  // const { address, contract, getCampaigns } = useStateContext();
+  const { currentAccount, getCampaign } = useStateContext();
 
-  // const fetchCampaigns = async () => {
-  //   setIsLoading(true);
-  //   const data = await getCampaigns();
-  //   setCampaigns(data);
-  //   setIsLoading(false);
-  // }
+  const fetchCampaigns = async () => {
+    setIsLoading(true);
+    const data = await getCampaign();
+    setCampaigns(data);
+    setIsLoading(false);
+  }
 
-  // useEffect(() => {
-  //   if(contract) fetchCampaigns();
-  // }, [address, contract]);
+  useEffect(() => {
+     fetchCampaigns();
+  }, [currentAccount]);
 
   return (
     <DisplayCampaigns 

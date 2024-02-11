@@ -8,7 +8,7 @@ interface Campaigns {
   title: string;
   description: string;
   target: string;
-  deadline: number;
+  deadline: number | any;
   amountCollected: string;
   pId: string;
 }
@@ -70,6 +70,7 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
         const accounts = await ethereum.request({
           method: "eth_requestAccounts",
         });
+        console.log("🚀 ~ connectWal ~ account:", accounts)
 
         setCurrentAccount(accounts[0]);
         window.location.reload();
@@ -79,40 +80,31 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-  const publishCampaign = async (form) => {
+  const publishCampaign = async (form:Partial<Campaigns>) => {
     try {
       // const data = await createCampaign({
-const transactionsContract : any = createEthereumContract();
-       const data = await ethereum.request({
-          method: "eth_sendTransaction",
-    params: [{
-      owner:currentAccount, // owner
-      title:form.title, // title
-      description:form.description, // description
-      target:form.target,
-      deadline:new Date(form.deadline).getTime(), // deadline,
-      // form.image,
-    }],
-       });
+const transactionsContract : any = await createEthereumContract();
+       
       
-      const transactionHash = await transactionsContract.createCampaign({
-        owner:currentAccount, // owner
-        title: form.title, // title
-        description: form.description, // description
-        traget:form.target,
-        deadline: new Date(form.deadline).getTime()}
+      const transactionHash = await transactionsContract.createCampaign(
+        currentAccount, // owner
+        form.title, // title
+        form.description, // description
+        form.target,
+       new Date(form.deadline).getTime()
       );
+
        setIsLoading(true);
       await transactionHash.wait();
       setIsLoading(false);
 
-      console.log("contract call success", data);
+      console.log("contract call success", transactionHash);
     } catch (error) {
       console.log("contract call failure", error);
     }
   };
 
-  const getCampaigns = async () => {
+  const getCampaign = async () => {
      const provider = new ethers.providers.Web3Provider(ethereum);
      const crowdfundingContract = new ethers.Contract(
        contractAddress,
@@ -120,7 +112,7 @@ const transactionsContract : any = createEthereumContract();
        provider
      );
     
-     const campaigns = crowdfundingContract.getCampaigns
+    const campaigns = await crowdfundingContract.getCampaigns();
 
     const parsedCampaings = campaigns.map((campaign:Campaigns, i:number) => ({
       owner: campaign.owner,
@@ -144,32 +136,44 @@ const transactionsContract : any = createEthereumContract();
   //   return filteredCampaigns;
   // }
 
-  // const donate = async (pId, amount) => {
-  //   const data = await contract.call('donateToCampaign', [pId], { value: ethers.utils.parseEther(amount)});
+  const donate = async (pId:number, amount:string) => {
+const transactionsContract: any = await createEthereumContract();
 
-  //   return data;
-  // }
+    const data = await transactionsContract.donateToCampaign(pId,
+      { value: ethers.utils.parseEther(amount) }
+    );
 
-  // const getDonations = async (pId) => {
-  //   const donations = await contract.call('getDonators', [pId]);
-  //   const numberOfDonations = donations[0].length;
+    return data;
+  }
 
-  //   const parsedDonations = [];
+  const getDonations = async (pId) => {
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const crowdfundingContract = new ethers.Contract(
+      contractAddress,
+      contractABI,
+      provider
+    );
 
-  //   for(let i = 0; i < numberOfDonations; i++) {
-  //     parsedDonations.push({
-  //       donator: donations[0][i],
-  //       donation: ethers.utils.formatEther(donations[1][i].toString())
-  //     })
-  //   }
+    const [donators, donations] = await crowdfundingContract.getDonators(pId);
+    //   const donations = await contract.call('getDonators', [pId]);
+    //   const numberOfDonations = donations[0].length;
 
-  //   return parsedDonations;
-  // }
+    //   const parsedDonations = [];
+
+    //   for(let i = 0; i < numberOfDonations; i++) {
+    //     parsedDonations.push({
+    //       donator: donations[0][i],
+    //       donation: ethers.utils.formatEther(donations[1][i].toString())
+    //     })
+    //   }
+
+      return [donators, donations];
+  }
 
 
     useEffect(() => {
       checkIfWalletIsConnect();
-    }, [transactionCount]);
+    }, []);
 
 
   return (
@@ -180,10 +184,10 @@ const transactionsContract : any = createEthereumContract();
         isLoading,
         connectWallet,
         createCampaign: publishCampaign,
-        getCampaigns,
+        getCampaign,
         //   getUserCampaigns,
-        //   donate,
-        //   getDonations
+          donate,
+          getDonations
       }}
     >
       {children}
