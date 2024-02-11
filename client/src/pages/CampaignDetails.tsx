@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ethers } from "ethers";
 
 import { useStateContext } from "../context";
 import { CountBox, CustomButton, Loader } from "../components";
@@ -10,18 +9,18 @@ import { calculateBarPercentage, daysLeft } from "../utils";
 const CampaignDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { donate, getDonations, currentAccount } = useStateContext();
+  const { donate, getDonations, currentAccount } = useStateContext() as any;
 
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [donators, setDonators] = useState([]);
-  const [donations, setDonations] = useState([]);
+  const [, setDonations] = useState([]);
 
   const remainingDays = daysLeft(state.deadline);
 
   const fetchDonators = async () => {
     const data = await getDonations(state.pId);
-    console.log("🚀 ~ fetchDonators ~ data:", data)
+    console.log("🚀 ~ fetchDonators ~ data:", data);
     const [donators, donations] = data;
     setDonators(donators);
     setDonations(donations);

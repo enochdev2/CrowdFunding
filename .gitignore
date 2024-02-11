@@ -1,0 +1,12 @@
+/smart_contract
+/smart_contract
+
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage

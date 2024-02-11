@@ -5,20 +5,23 @@ import { ethers } from 'ethers';
 import { useStateContext } from '../context';
 import { money } from '../assets';
 import { CustomButton, FormField, Loader } from '../components';
-// import { checkIfImage } from '../utils';
+import { checkIfImage } from '../utils';
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { createCampaign } = useStateContext();
+  const { createCampaign } = useStateContext() as any;
   const [form, setForm] = useState({
     name: '',
     title: '',
     description: '',
     target: '', 
     deadline: '',
-    // image: ''
+    image: ''
   });
+
+  console.log(form.image);
+  
 
   const handleFormFieldChange = (fieldName:string, e:ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [fieldName]: e.target.value })
@@ -27,17 +30,17 @@ const CreateCampaign = () => {
   const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // checkIfImage(form.image, async (exists:string) => {
-    //   if(exists) {
+    checkIfImage(form.image, async (exists:string) => {
+      if(exists) {
         setIsLoading(true)
         await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
         setIsLoading(false);
         navigate('/');
-      // } else {
-      //   alert('Provide valid image URL')
-      //   setForm({ ...form, image: '' });
-      // }
-  //   })
+      } else {
+        alert('Provide valid image URL')
+        setForm({ ...form, image: '' });
+      }
+    })
   }
 
   return (
@@ -113,7 +116,7 @@ const CreateCampaign = () => {
           />
         </div>
 
-        {/* <FormField
+        <FormField
           labelName="Campaign image *"
           placeholder="Place image URL of your campaign"
           inputType="url"
@@ -121,7 +124,7 @@ const CreateCampaign = () => {
           handleChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFormFieldChange("image", e)
           }
-        /> */}
+        />
 
         <div className="flex justify-center items-center mt-[40px]">
           <CustomButton
