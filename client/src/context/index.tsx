@@ -35,12 +35,7 @@ const createEthereumContract = async () => {
 };
 
 export const StateContextProvider = ({ children }: { children: ReactNode }) => {
-  const [formData, setformData] = useState({
-    addressTo: "",
-    amount: "",
-    keyword: "",
-    message: "",
-  });
+ 
   const [currentAccount, setCurrentAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(
@@ -90,22 +85,22 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
 const transactionsContract : any = createEthereumContract();
        const data = await ethereum.request({
           method: "eth_sendTransaction",
-        params: [
-          currentAccount, // owner
-          form.title, // title
-          form.description, // description
-          form.target,
-          new Date(form.deadline).getTime(), // deadline,
-          // form.image,
-       ],
+    params: [{
+      owner:currentAccount, // owner
+      title:form.title, // title
+      description:form.description, // description
+      target:form.target,
+      deadline:new Date(form.deadline).getTime(), // deadline,
+      // form.image,
+    }],
        });
       
-      const transactionHash = await transactionsContract.createCampaign(
-        currentAccount, // owner
-        form.title, // title
-        form.description, // description
-        form.target,
-        new Date(form.deadline).getTime()
+      const transactionHash = await transactionsContract.createCampaign({
+        owner:currentAccount, // owner
+        title: form.title, // title
+        description: form.description, // description
+        traget:form.target,
+        deadline: new Date(form.deadline).getTime()}
       );
        setIsLoading(true);
       await transactionHash.wait();
@@ -182,6 +177,7 @@ const transactionsContract : any = createEthereumContract();
       value={{
         currentAccount,
         //   contract,
+        isLoading,
         connectWallet,
         createCampaign: publishCampaign,
         getCampaigns,
