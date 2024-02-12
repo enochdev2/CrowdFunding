@@ -10,21 +10,21 @@ import { ethers } from "ethers";
 import { contractABI, contractAddress } from "../constants/config";
 
 interface Campaigns {
-  owner: string;
-  title: string;
-  description: string;
-  image: string;
-  target: string;
-  deadline: number | any;
-  amountCollected: string;
-  pId: string;
+  owner?: string | any;
+  title?: string;
+  description?: string;
+  image?: string;
+  target?: string | any;
+  deadline?: number | any;
+  amountCollected?: any;
+  pId?: string;
   currentAccount: string;
   isLoading: boolean;
   connectWallet: () => void;
   createCampaign: (form: Partial<Campaigns>) => Promise<void>;
   getCampaign: () => void;
   getUserCampaigns: () => void;
-  donate: () => (pId: number, amount: string) => Promise<any>;
+  donate: any;
   getDonations: (pId: number) => Promise<any[]>;
 }
 
@@ -160,7 +160,7 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
     return filteredCampaigns;
   };
 
-  const donate = async (pId: number, amount: string) => {
+  const donate = async (pId?: number, amount?: number | any) => {
     const transactionsContract: any = await createEthereumContract();
 
     const data = await transactionsContract.donateToCampaign(pId, {
