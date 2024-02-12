@@ -1,4 +1,9 @@
-import { createCampaign, dashboard, logout, payment, profile, withdraw } from '../assets';
+import withdraw  from '../assets/withdraw.svg';
+import profile  from '../assets/profile.svg';
+import payment  from '../assets/payment.svg';
+import logout from '../assets/logout.svg';
+import dashboard from '../assets/dashboard.svg';
+import createCampaign from '../assets/create-campaign.svg';
 
 export const navlinks = [
   {

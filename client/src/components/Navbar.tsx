@@ -3,14 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useStateContext } from "../context";
 import { CustomButton } from ".";
-import { logo, menu, search, thirdweb } from "../assets";
+import logo from "../assets/logo.svg";
+import thirdweb from "../assets/Dev-Noch1.png";
+import search from "../assets/search.svg";
+import menu from "../assets/menu.svg";
 import { navlinks } from "../constants";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  const { connectWallet, currentAccount } = useStateContext();
+  const { connectWallet, currentAccount } = useStateContext() as any;
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -33,16 +36,10 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={
-            currentAccount ? 'Create a campaign' :
-            "Connect"
-          }
-          styles={
-            currentAccount ? 'bg-[#1dc071]' :
-            "bg-[#8c6dfd]"
-          }
+          title={currentAccount ? "Create a campaign" : "Connect"}
+          styles={currentAccount ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
-            if(currentAccount) navigate('create-campaign')
+            if (currentAccount) navigate("create-campaign");
             else connectWallet();
           }}
         />
@@ -114,16 +111,13 @@ const Navbar = () => {
           <div className="flex mx-4">
             <CustomButton
               btnType="button"
-              title={
-                currentAccount ? 'Create a campaign' :
-                "Connect"
-              }
+              title={currentAccount ? "Create a campaign" : "Connect"}
               styles={
                 // address ? 'bg-[#1dc071]' :
                 "bg-[#8c6dfd]"
               }
               handleClick={() => {
-                if(currentAccount) navigate('create-campaign')
+                if (currentAccount) navigate("create-campaign");
                 else connectWallet();
               }}
             />

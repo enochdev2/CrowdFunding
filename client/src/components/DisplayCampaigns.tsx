@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from "uuid";
 import FundCard from './FundCard';
-import { loader } from '../assets';
+import  loader from '../assets/images/loader.svg'
 import { CampaignDetails } from '../utils';
 
 interface Campaigns {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import  { useState, useEffect } from 'react'
 
 import { DisplayCampaigns } from '../components';
 import { useStateContext } from '../context'
@@ -7,7 +7,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState<[]>([]);
 
-  const { currentAccount, getCampaign } = useStateContext();
+  const { currentAccount, getCampaign } = useStateContext() as any;
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
