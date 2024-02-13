@@ -5,9 +5,10 @@ import { useStateContext } from '../context'
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState<[]>([]);
+  const [campaigns, setCampaigns] = useState([]);
 
-  const { currentAccount, getUserCampaigns } = useStateContext() as any;
+  const { currentAccount, getUserCampaigns } =
+    useStateContext() as any;
 
   const fetchCampaigns = async () => {
     setIsLoading(true);

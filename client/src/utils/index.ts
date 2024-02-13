@@ -25,6 +25,7 @@ export interface CampaignDetails {
   owner: string;
   title: string;
   description: string;
+  image: string;
   target: string;
   deadline: number;
   amountCollected: string;

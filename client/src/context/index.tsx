@@ -35,6 +35,7 @@ declare global {
 }
 
 const ethereum = window.ethereum;
+
 const StateContext = createContext<Campaigns | undefined>(undefined);
 
 const createEthereumContract = async () => {
@@ -50,8 +51,9 @@ const createEthereumContract = async () => {
 };
 
 export const StateContextProvider = ({ children }: { children: ReactNode }) => {
-  const [currentAccount, setCurrentAccount] = useState("");
+  const [currentAccount, setCurrentAccount] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  // const [userCampaign, setUserCampaign] = useState([]);
   
 
   const checkIfWalletIsConnect = async () => {
@@ -122,7 +124,6 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const campaigns = await crowdfundingContract.getCampaigns();
-    console.log("🚀 ~ getCampaign ~ campaigns:", campaigns)
 
     const parsedCampaings = campaigns.map((campaign: Campaigns, i: number) => ({
       owner: campaign.owner,
@@ -150,15 +151,21 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const allCampaigns = await crowdfundingContract.getCampaigns();
-
+    
+    
     const filteredCampaigns = await allCampaigns.filter(
-      (campaign: Campaigns) => campaign.owner.toString() === currentAccount.toString()
+      (campaign: Campaigns) => campaign.owner === currentAccount
       );
-      console.log("🚀 ~ getUserCampaigns ~ currentAccount:", currentAccount.toString())
-    console.log("🚀 ~ getUserCampaigns ~ filteredCampaigns:", filteredCampaigns)
-
-    return filteredCampaigns;
+      console.log(
+        "🚀 ~ getUserCampaigns ~ filteredCampaigns:",
+        filteredCampaigns
+      );
+      return filteredCampaigns;
   };
+  
+  
+
+
 
   const donate = async (pId?: number, amount?: number | any) => {
     const transactionsContract: any = await createEthereumContract();
@@ -185,14 +192,12 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     checkIfWalletIsConnect();
-    getCampaign();
   }, []);
 
   return (
     <StateContext.Provider
       value={{
         currentAccount,
-        //   contract,
         isLoading,
         connectWallet,
         createCampaign: publishCampaign,
