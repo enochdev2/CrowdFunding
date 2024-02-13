@@ -151,15 +151,14 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const allCampaigns = await crowdfundingContract.getCampaigns();
+
+    const filteredCampaigns = allCampaigns.filter((campaign:any) => {
+  console.log("campaign.owner:", campaign.owner);
+      console.log("currentAccount:", currentAccount);
+  return campaign.owner.toString().trim() === currentAccount.toString().toLowerCase().trim();
+});
     
     
-    const filteredCampaigns = await allCampaigns.filter(
-      (campaign: Campaigns) => campaign.owner === currentAccount
-      );
-      console.log(
-        "🚀 ~ getUserCampaigns ~ filteredCampaigns:",
-        filteredCampaigns
-      );
       return filteredCampaigns;
   };
   

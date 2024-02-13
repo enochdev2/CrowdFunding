@@ -1,5 +1,5 @@
 import withdraw  from '../assets/withdraw.svg';
-import profile  from '../assets/profile.svg';
+// import profile  from '../assets/profile.svg';
 import payment  from '../assets/payment.svg';
 import logout from '../assets/logout.svg';
 import dashboard from '../assets/dashboard.svg';
@@ -28,11 +28,11 @@ export const navlinks = [
     link: '/',
     disabled: true,
   },
-  {
-    name: 'profile',
-    imgUrl: profile,
-    link: '/profile',
-  },
+  // {
+  //   name: 'profile',
+  //   imgUrl: profile,
+  //   link: '/profile',
+  // },
   {
     name: 'logout',
     imgUrl: logout,
