@@ -72,7 +72,17 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.log(error);
     }
+    window.ethereum.on("chainChanged", (chainId:any) => {
+      window.location.reload();
+    });
+
+    window.ethereum.on("accountsChanged", async function (currentAccount:string) {
+      setCurrentAccount(currentAccount[0]);
+      await checkIfWalletIsConnect();
+    });
   };
+  console.log(currentAccount);
+  
 
   const connectWallet = async () => {
     try {
