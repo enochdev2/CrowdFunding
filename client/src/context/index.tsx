@@ -53,8 +53,6 @@ const createEthereumContract = async () => {
 export const StateContextProvider = ({ children }: { children: ReactNode }) => {
   const [currentAccount, setCurrentAccount] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  // const [userCampaign, setUserCampaign] = useState([]);
-  
 
   const checkIfWalletIsConnect = async () => {
     try {
@@ -72,15 +70,16 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.log(error);
     }
-  
 
-    window.ethereum.on("accountsChanged", async function (currentAccount:string) {
-      setCurrentAccount(currentAccount[0]);
-      await checkIfWalletIsConnect();
-    });
+    window.ethereum.on(
+      "accountsChanged",
+      async function (currentAccount: string) {
+        setCurrentAccount(currentAccount[0]);
+        await checkIfWalletIsConnect();
+      }
+    );
   };
   console.log(currentAccount);
-  
 
   const connectWallet = async () => {
     try {
@@ -115,7 +114,7 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       await transactionHash.wait();
       setIsLoading(false);
-      // getCampaign();
+      getCampaign();
 
       console.log("contract call success", transactionHash);
     } catch (error) {
@@ -124,7 +123,11 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getCampaign = async () => {
-    const provider = new ethers.providers.Web3Provider(ethereum);
+    const provider = ethereum
+      ? new ethers.providers.Web3Provider(ethereum)
+      : new ethers.providers.JsonRpcProvider(
+          `https://sepolia.infura.io/v3/${import.meta.env.VITE_PUBLIC_RPC_URL}`
+        );
     const crowdfundingContract = new ethers.Contract(
       contractAddress,
       contractABI,
@@ -160,19 +163,22 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
 
     const allCampaigns = await crowdfundingContract.getCampaigns();
 
-    const filteredCampaigns = allCampaigns.filter((campaign:any) => {
-  console.log("campaign.owner:", campaign.owner);
+    const filteredCampaigns = allCampaigns.filter((campaign: any) => {
+      console.log("campaign.owner:", campaign.owner);
       console.log("currentAccount:", currentAccount);
-  return campaign.owner.toString().trim() === currentAccount.toString().toLowerCase().trim();
-});
     
-    
-      return filteredCampaigns;
+
+      const checkifTrue =
+        String(campaign.owner) ===
+        String(currentAccount);
+      const check = Boolean(checkifTrue);
+      console.log("🚀 ~ filteredCampaigns ~ check:", check);
+      return check;
+      // return campaign.owner.toLowerCase() === currentAccount.toLowerCase();
+    });
+
+    return filteredCampaigns;
   };
-  
-  
-
-
 
   const donate = async (pId?: number, amount?: number | any) => {
     const transactionsContract: any = await createEthereumContract();
